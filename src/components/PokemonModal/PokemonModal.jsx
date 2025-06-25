@@ -17,7 +17,7 @@ const style = {
 
 export function PokemonModal({ open, handleClose, pokemon }) {
   if (!pokemon) return null;
-
+  console.log(pokemon)
   return (
     <div>
       <Modal
@@ -31,9 +31,6 @@ export function PokemonModal({ open, handleClose, pokemon }) {
         {pokemon.name}
         </Typography>
         <img src={pokemon.image} alt={pokemon.name} style={{ width: '100%', height: 'auto' }} />
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Aqui você pode colocar mais informações do Pokémon.
-        </Typography>
         </Box>
       </Modal>
     </div>

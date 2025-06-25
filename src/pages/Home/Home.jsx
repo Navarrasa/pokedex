@@ -10,6 +10,7 @@ import { Filtros } from '../../components/Filtros/Filtros';
 
 export function Home(){
 
+  const [allPokemons, setAllPokemons] = useState([]);
   const [pokemons, setPokemons] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedPokemon, setSelectedPokemon] = useState(null);
@@ -23,12 +24,13 @@ export function Home(){
     for (let i = 1; i <= 50; i++){
       endpoints.push(`https://pokeapi.co/api/v2/pokemon/${i}/`)
     }
-    // console.log(endpoints)
 
-    let response = axios.all(endpoints.map((endpoint) => axios
-                                                            .get(endpoint)))
-                                                            .then((res) => setPokemons(res))
-                                                            .catch((err) => console.log(err));
+    axios.all(endpoints.map((endpoint) => axios.get(endpoint)))
+      .then((res) => {
+        setAllPokemons(res);
+        setPokemons(res);
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleCardClick = (pokemon) => {
@@ -42,45 +44,40 @@ export function Home(){
   };
 
   const pokemonFilter = (name) =>{
-    let filteredPokemons = []
-    if(name===""){
-      getPokemons()
+    if(name === ""){
+      setPokemons(allPokemons);
+    } else {
+      const filteredPokemons = allPokemons.filter(p => p.data.name.includes(name.toLowerCase()));
+      setPokemons(filteredPokemons);
     }
-    // console.log(name);
-    for (let i in pokemons){
-      if(pokemons[i].data.name.includes(name)){
-        filteredPokemons.push(pokemons[i])
-      }
-    }
-    // console.log(filteredPokemons);
-    setPokemons(filteredPokemons);
   };
 
   return(
   <>
     <Navbar pokemonFilter={pokemonFilter}/>
-    <Container maxWidth="false">
+    <Container maxWidth="false" sx={{ mt: 3, mb: 3 }}>
       <Grid container spacing={3}>
         {pokemons.map((pokemon, index) => {
-        const data = {
-        name: pokemon.data.name,
-        image: pokemon.data.sprites.front_default,
-        types: pokemon.data.types
-        };
-      return (
-      <Grid size={{ xs: 12, sm: 6, md: 2 }} key={index}>
-        <PokemonCard 
-          name={data.name} 
-          image={data.image}
-          types={data.types}
-          onClick={() => handleCardClick(data)}
-        />
+          const data = {
+            name: pokemon.data.name,
+            image: pokemon.data.sprites.front_default,
+            types: pokemon.data.types,
+          };
+          return (
+            <Grid size={{ xs: 12, sm: 6, md: 2 }} key={index}>
+              <PokemonCard 
+                name={data.name} 
+                image={data.image}
+                types={data.types}
+                onClick={() => handleCardClick(data)}
+              />
+            </Grid>
+          );
+        })}
       </Grid>
-      );
-      })}
-        </Grid>
-      </Container>
+    </Container>
     <PokemonModal open={open} handleClose={handleClose} pokemon={selectedPokemon}/>
+    <Footer />
   </>
   );
 }
