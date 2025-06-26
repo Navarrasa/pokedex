@@ -50,10 +50,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export function Navbar({ pokemonFilter }) {
+export function Navbar({ pokemonFilter, handleSelectType }) {
   return (
-    <Box sx={{ flexGrow: 1, marginBottom:"2em"}}>
-      <AppBar position="static" sx={{ backgroundColor: "black"}}>
+    <Box sx={{ flexGrow: 1, marginBottom: "2em" }}>
+      <AppBar position="static" sx={{ backgroundColor: "black" }}>
         <Toolbar>
           <Typography
             variant="h6"
@@ -63,8 +63,8 @@ export function Navbar({ pokemonFilter }) {
           >
             Pokedex
           </Typography>
-          <Filtros/>
-          <Search onChange={(e)=>pokemonFilter(e.target.value)}>
+          <Filtros handleSelectType={handleSelectType} />
+          <Search onChange={(e) => pokemonFilter(e.target.value)}>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>

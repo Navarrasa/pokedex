@@ -15,13 +15,15 @@ export function Home(){
   const [open, setOpen] = useState(false);
   const [selectedPokemon, setSelectedPokemon] = useState(null);
 
+
   useEffect(() => {
       getPokemons();
   }, []);
 
   const getPokemons = () => {
+    let pokemonQuantity = prompt("Quantos Pokemons deseja carregar?? (1-151)");
     let endpoints = [];
-    for (let i = 1; i <= 50; i++){
+    for (let i = 1; i <=pokemonQuantity; i++){
       endpoints.push(`https://pokeapi.co/api/v2/pokemon/${i}/`)
     }
 
@@ -52,9 +54,18 @@ export function Home(){
     }
   };
 
+  const handleSelectType = (type) => {
+    if(type === "all"){
+      setPokemons(allPokemons);
+    } else {
+      const filteredPokemons = allPokemons.filter(p => p.data.types.some(t => t.type.name === type)
+      );
+      setPokemons(filteredPokemons);
+    }};
+
   return(
   <>
-    <Navbar pokemonFilter={pokemonFilter}/>
+    <Navbar pokemonFilter={pokemonFilter} handleSelectType={handleSelectType}/>
     <Container maxWidth="false" sx={{ mt: 3, mb: 3 }}>
       <Grid container spacing={3}>
         {pokemons.map((pokemon, index) => {
